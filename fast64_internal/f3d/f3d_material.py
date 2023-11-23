@@ -1,5 +1,7 @@
 import logging
 import bpy, math, os
+import pathlib
+
 from bpy.types import Operator, Menu
 from bl_operators.presets import AddPresetBase
 from bpy.utils import register_class, unregister_class
@@ -1854,9 +1856,10 @@ def load_handler(dummy):
 
         # detect if this is one your addon's libraries here
         if "f3d_material_library.blend" in lib_path:
-
-            addon_dir = os.path.dirname(os.path.abspath(__file__))
-            new_lib_path = os.path.join(addon_dir, "f3d_material_library.blend")
+            USER = pathlib.Path(bpy.utils.resource_path('USER'))
+            BLEND_FILE = USER / 'scripts' / 'addons' / 'fast64-main' / 'fast64_internal' / 'f3d' / 'f3d_material_library.blend'
+          
+            new_lib_path = str(BLEND_FILE)
 
             if lib_path != new_lib_path:
                 logger.info("Reloading the library: %s : %s => %s" % (lib.name, lib_path, new_lib_path))
@@ -1948,8 +1951,11 @@ def createScenePropertiesForMaterial(material: bpy.types.Material):
 
 
 def link_f3d_material_library():
-    dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "f3d_material_library.blend")
-
+    USER = pathlib.Path(bpy.utils.resource_path('USER'))
+    BLEND_FILE = USER / 'scripts' / 'addons' / 'fast64-main' / 'fast64_internal' / 'f3d' / 'f3d_material_library.blend'
+    
+    dir = str(BLEND_FILE)
+    
     prevMode = bpy.context.mode
     if prevMode != "OBJECT":
         bpy.ops.object.mode_set(mode="OBJECT")
